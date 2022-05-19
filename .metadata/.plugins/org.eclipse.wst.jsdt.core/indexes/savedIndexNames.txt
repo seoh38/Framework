@@ -1,0 +1,9 @@
+INDEX VERSION 1.4+C:\SEOHEE\Framwork\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3424479853.index
+3357540192.index
+1647586151.index
+1130296580.index
+794336824.index
+3334935052.index
+281516569.index
+1922520064.index

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h2>게시판 수정</h2>
+<form th:action="@{/board/update}" method="POST">
+	<input type="hidden" name="no" th:value="${ board.no }">
+	
+	<table id='tbl-board'>
+		<tr>
+			<th>제목</th>
+			<td><input type="text" name="title" id="title" th:value="${ board.title }"></td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td><input type="text" name="writer" th:value="${ board.writer }" readonly></td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td>
+				<textarea name="content" cols="50" rows="15" th:text="${ board.content }"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2">
+				<input type="submit" value="수정">
+				<input type="button" th:onclick="|location.replace('@{/board/list}')|" value="목록으로">
+			</th>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

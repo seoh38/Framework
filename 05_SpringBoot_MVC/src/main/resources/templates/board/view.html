@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script th:src="@{/js/jquery-3.6.0.js}"></script>
+</head>
+<body>
+	<h1>게시글 상세 조회</h1>
+	
+	<table id="tbl-board">
+		<tr>
+			<th>글번호</th>
+			<td th:text="${ board.no }"></td>
+		</tr>
+		<tr>
+			<th>제 목</th>
+			<td th:text="${ board.title }"></td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td th:text="${ board.writer }"></td>
+		</tr>
+		<tr>
+			<th>조회수</th>
+			<td th:text="${ board.readCount }"></td>
+		</tr>
+		<tr>
+			<th>내 용</th>
+			<td th:text="${ board.content }"></td>
+		</tr>
+		<tr>
+			<th colspan="2">
+				<button type="button" th:onclick="|location.href='@{/board/update(no=${board.no})}'|">수정</button>
+				<button type="button" id="btnDelete">삭제</button>
+				<input type="button" th:onclick="|location.replace('@{/board/list}')|" value="목록으로">
+			</th>
+		</tr>
+	</table>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(() => {
+			
+			$("#btnDelete").on("click", (e) => {
+				if(confirm("정말로 게시글을 삭제 하시겠습니까?")) {
+					location.replace([[@{ /board/delete(no=${board.no}) }]]);
+				}
+			});
+		});
+	 /*]]>*/
+	</script>
+</body>
+</html>

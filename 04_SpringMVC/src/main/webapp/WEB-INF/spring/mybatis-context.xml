@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- dataSource : 커넥션 풀을 사용하기 위해서 제공해주는 인터페이스! -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close"
+		p:driverClassName="${db.driver}"
+		p:url="${db.url}"
+		p:username="${db.username}"
+		p:password="${db.password}"
+	/>
+	
+	<bean id="mybatisConfig" class="org.apache.ibatis.session.Configuration"
+		p:jdbcTypeForNull="NULL"
+	/>
+	
+	<!-- 
+		p:configLocation="classpath:mybatis-config.xml"
+		p:configuration-ref="mybatisConfig"
+	 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:configuration-ref="mybatisConfig"
+		p:mapperLocations="classpath:mappers/**/*.xml"
+		p:typeAliasesPackage="com.kh.mvc.*.model.vo"
+		p:dataSource-ref="dataSource"
+	/>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"
+		c:sqlSessionFactory-ref="sqlSessionFactory"
+	/>
+	
+	<bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+      p:basePackage="com.kh.mvc.*.model.dao"
+   />
+
+	<!-- 
+		트랜잭션 처리 방법
+		1. 트랜잭션 매니저 등록하기(transactionManager)
+		2. @Transactional을 사용해서 트랜젝션 처리가 될수 있도록 아래의 태그를 설정 파일에 등록한다.
+		  <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+	 -->	
+	 <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+	 		p:dataSource-ref="dataSource"
+	 />
+	 
+</beans>

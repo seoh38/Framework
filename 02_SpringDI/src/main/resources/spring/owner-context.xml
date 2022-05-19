@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 
+		Owner owner = new Owner("이서희", 27, new Cat("오애옹"));
+	-->
+		
+	 <!-- spring에서 bean 태그를 읽어와서 객체를 만들어서 application context에 보관한다. -->
+	 
+	 <!-- 
+	 <bean id="owner" class="com.kh.di.owner.Owner">
+	 	<constructor-arg name="name" value="순두부" />
+	 	<constructor-arg name="age" value="11" />
+	 	<constructor-arg name="pet" ref="dog" />
+	 </bean>
+	 
+	 인덱스 번호로 bean 만들어주기
+	<bean>
+	 	<constructor-arg index="0" value="이서희" />
+	 	<constructor-arg index="1" value="27"/>
+	 	<constructor-arg index="2" ref="cat"/>
+	</bean>	 
+	  -->
+	 
+	 <!-- c:namespace를 사용하면 좀 더 간결하게 코드를 작성할 수 있다 -->
+	 <!-- 생성자의 인자값을 bean 태그의 속성으로 선언하기 위해서 선언한다.-->
+	 
+	 <bean id="lee" class="com.kh.di.owner.Owner" c:name="이서희" c:age="20" c:pet-ref="cat"/>
+	 <bean id="dubu" class="com.kh.di.owner.Owner" c:name="순두부" c:age="11" c:pet-ref="dog"/>
+	 
+
+</beans>

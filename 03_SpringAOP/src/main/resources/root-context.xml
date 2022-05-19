@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!--
+		AspectJ 어노테이션을 사용하기 위한 프록시 설정	
+		
+		스프링은 AOP를 위한 프록시 객체를 생성할 때 실제 생설할 Bean 객체가 인터페이스를 구현하고 있으면, 인터페이스를 이용해서 프로시를 생성한다.
+		Bean 객체가 인터페이스를 구현하고 있을 때 인터페이스가 아닌 클래스를 이용해서 프록시를 생성하고 싶다면 proxy-target-class="true" 속성을 추가한다.
+		
+		proxy-target-class : 프록시 객체를 클래스를 가지고 만들라고 하는 설정!!!!
+	-->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<!-- sword라는 빈의 값을 참조할 수 있게 해준다. -->
+	<bean id="character" class="com.kh.aop.character.Character" p:name="이서희" p:level="99" p:weapon-ref="bow"/>
+	
+	<bean id="sword" class="com.kh.aop.weapon.Sword" p:name="정기점검"/>
+
+	<bean id="bow" class="com.kh.aop.weapon.Bow" p:name="최종병기활"/>
+	<!-- 
+		Aspect 지정할 객체는 반드시 빈으로 선언되어야 한다.
+		(xml, annotation을 설정 시에도 모두 빈으로 선언이 되어야 한다.
+	 -->
+	<bean id="characterAspect" class="com.kh.aop.aspect.CharacterAspect" />
+	
+	
+	<!-- xml기반의 aop 네임스페이스를 통한 AOP구현! -->
+	<!-- 
+	<aop:config>
+		<aop:aspect ref="characterAspect">
+			<aop:pointcut 
+				id="questPointCut"
+				expression="execution(* com.kh.aop.character.Character.quest(..))" />
+		
+			<aop:before
+			 	pointcut="execution(* com.kh.aop.character.Character.quest(..))"
+			 	method="beforeQuest"/>
+			 
+				pointcut으로 지정한 메소드가 실행된 후에 결과에 상관없이 method="afterQuest"를 실행한다.
+				<aop:after 
+					pointcut="execution(* com.kh.aop.character.Character.quest(..))"
+					method="afterQuest"/> 	
+				
+				<aop:after-returning 
+					pointcut-ref="questPointCut"
+					method="questSuccess"/>
+				
+				<aop:after-throwing 
+					pointcut-ref="questPointCut"
+					method="questFail"/>	
+					
+				<aop:around
+					pointcut-ref="questPointCut" 
+					method="questAdvice"/>	
+		</aop:aspect>	
+	</aop:config>
+	-->
+</beans>

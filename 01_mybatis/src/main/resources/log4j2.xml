@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+	로그(log)란? 
+		소프트웨어의 이벤트를 기록하고 문제상황(error) 등을 기록한다고 생각하면 된다.
+		why? 
+		 - 사용자에 대한 분석 자료로 사용할 수도 있음(데이터 분석)
+		 - 문제 발생시 어디를 수정하면 되는지 찾을 수 있음
+		 - 대부분 파일 형태로 만들어진다.
+		 
+	로그 작성시 주의사항(로그 프레임워크를 사용하면 됨)
+	 - 애플리케이션에 동작에 대해 구체적으로 설명할 수 있어야함
+	 - 성능에 저하(부하)가 생기면 안됨
+	 - 어떠한 환경에서든 로그를 쉽게 수집할 수 있어야한다.	 
+	 
+	로그 프레임워크(Log Framework)	 
+	다양한 환경에서 여러 서버에있는 로그들을 수집하는 역할을 한다.	 	
+	
+	SLF4J(Simple Logging Facade For Java)
+	 애플리케이션 -> SLF4J -> log4j 의 실행 순서
+	 - 로그에 대한 Facade 패턴임
+	 - 다양한 로그 프레임워크에 접근할수 있도록 추상화된 객체
+ -->
+ 
+ <!-- 
+ 	Configuration : log4j의 설정파일의 최상단에 있는 설정파일
+ 	status : 실제로 설정파일을 읽어갈 때 발생하는 로그들을 찍어주는 레벨! 
+ 			 개발할 때는 "DEBUG"로 설정
+ 	level :
+  -->
+
+<Configuration status="INFO">
+	<!-- Appenders : 로그의 출력 위치를 지정한다. (콘솔, 파일, OutputStream,.....) -->
+  <Appenders>
+ 	<Console name="console" target="SYSTEM_OUT">
+ 	<!--
+ 	 	PatternLayout : 로그의 출력 포맷을 지정한다. 
+ 	 	
+ 	 	[%level] : 디버깅 레벨(앞에 -5는 5글자로 찍겠다!)
+ 	 	%d{yyyy-MM-dd HH:mm:ss.SSS} : 시간대
+ 	 	[%t] : 스레디 이름
+ 	 	%M : 어떤 메소드에서 시작이 됐는지 출력
+ 	 	%c{3} : 어떤 클래스에서 찍히는지(클래스이름을 기준으로 3단계만 보여줌, 최대 5단계까지 보여줌)
+ 	 	%msg :  로그 메세지를 보여줌!
+ 	 -->
+ 	
+        <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{5} %M - %msg - %n "/>
+    </Console>
+    <File name="file" fileName="./logs/member_log.txt">
+        <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{3} %M - %msg - %n "/>
+    </File>
+    
+    <File name="file2" fileName="./logs/board_log.txt">
+        <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{3} %M - %msg - %n "/>
+    </File>
+  </Appenders>
+  
+  <!-- Loggers : 로깅이 일어나는 부분을 그룹화하는 역할을 한다. -->
+  <Loggers>
+  <!-- Root : 일반적인 로그 정책을 의미 -->
+  <!-- FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+  <!-- 
+  	FATAL : 아주 심각한 에러가 발생했을 때
+  	ERROR : 일반적인 에러 발생시
+  	WARN : 경고! 주의가 필요한 상황에
+  	INFO : 일반적인 정보
+  	DEBUG : 디버깅 정보
+  	TRACE : 경로를 추적할 때
+  	ALL : 모두 찍어줌!
+  	
+  	지정한 레벨 등급 이상의 레벨이 출력되도록 한다.
+  	만약 DEBUG를 선택시 DEBUG를 포함해서 자신보다 높은 로그 레벨들을 모두 찍어줌!	
+   -->
+	<Root level="DEBUG" additivity="false">
+      <AppenderRef ref="console"/>
+      <!--       
+      <AppenderRef ref="file"/>
+       -->
+    </Root>
+    
+    <!-- 추가로 필요한 로그 정책을 정의한다. (패키지의 범위를 설정) -->
+    <!--  additivity : 중복으로 로그를 찍지 않도록 해준다.(false) -->
+    <Logger name="com.kh.mybatis.member" level="DEBUG" additivity="false">
+    	  <AppenderRef ref="file"/>
+    </Logger>
+    
+    <Logger name="com.kh.mybatis.board" level="DEBUG" additivity="false">
+    	  <AppenderRef ref="file2"/>
+    </Logger>
+    
+  </Loggers>
+</Configuration>

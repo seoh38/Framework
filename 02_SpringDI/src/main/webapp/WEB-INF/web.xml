@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<!--
+		톰캣에서 context는 톰캣위에 올라가는 웹애플리케이션을 말한다.
+	
+	 	ContextLoaderListener : 톰캣에 context가 생성되거나 애플리케이션이 실행될때 실행됨(eventListener라고 생각하면됨)
+	 							애플리케이션을 로드할때 리스너에서 root-context.xml를 읽어서 애플리케이션 컨텍스트를 만들어준다.
+								코드상에서 직접 만들지 않고 자동으로 만들어준다.
+	-->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Processes application requests -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 
+		UTF-8 인코딩 필터
+		필터를 직접 만들어서 등록해도 되지만 스프링에서 인코딩 필터를 제공하고 있기 때문에 web.xml에 필터를 등록해 주기만 하면 된다.
+	 -->
+	<filter> 
+      <filter-name>encodingFilter</filter-name> 
+      <!-- 스프링에서 제공해주는 CharacterEncodingFilter  -->
+      <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class> 
+      <init-param> 
+         <param-name>encoding</param-name> 
+         <param-value>UTF-8</param-value> 
+      </init-param> 
+      <init-param> 
+         <param-name>forceEncoding</param-name> <!-- request, response의 인코딩을 무조건 UTF-8로 설정 -->
+         <param-value>true</param-value> 
+      </init-param> 
+   </filter> 
+   <filter-mapping> 
+      <filter-name>encodingFilter</filter-name> 
+      <url-pattern>/*</url-pattern> 
+   </filter-mapping>
+	 
+
+</web-app>

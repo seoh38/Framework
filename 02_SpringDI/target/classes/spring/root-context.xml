@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+   	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	 <!--  다른 설정 파일을 가져오기 위해 사용되는 태그 -->
+	 <import resource="owner-context.xml"/>		
+	 <import resource="pet-context.xml"/>	
+	 
+	 <!-- 
+	 	context:component-scan : @Component 어노테이션이 붙어있는 클래스를 찾아 클래스를 빈으로 생성할 수 있게끔 활성화 해준다.
+	 		
+	 		- base-package=" "에 지정해놓은 경로부터 검색하여 자동으로 Component 어노테이션이 붙은 클래스를 객체로 만든 후 빈으로 등록!
+	  -->
+	 <context:component-scan base-package="com.kh.di" />
+	 
+	 <!-- 여러개를 등록하고 싶으면 , 로 등록해줌 -->
+	 <context:property-placeholder location="classpath:character.properties, classpath:driver.properties"/>	
+</beans>

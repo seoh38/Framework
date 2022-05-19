@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<!-- 
+		Owner owner = new Owner("이서희", 27, new Cat("오애옹"));
+	 -->
+	 <!-- spring에서 bean 태그를 읽어와서 객체를 만들어서 application context에 보관한다. -->
+	 <bean id="owner" class="com.kh.di.owner.Owner">
+	 	<constructor-arg name="name" value="이서희" />
+	 	<constructor-arg name="age" value="27" />
+	 	<constructor-arg name="pet" ref="cat" />
+	 	<constructor-arg name="pet" ref="dog" />
+	 </bean>
+	 
+	 <!-- 
+	 	Pet pet = new Cat("오애옹")
+	 	
+	 	id="cat"를 통해서 의존성 주입을 해준다.(DI)
+	  -->
+	 <bean id="cat" class="com.kh.di.pet.Cat">
+	 	<constructor-arg name="name" value="오애옹"/>
+	 </bean>
+	 
+	 <!-- 
+	 	Pet pet = new Dog();
+	 	
+	 	pet.setName("두부");
+	  -->
+	 <bean id="dog" class="com.kh.di.pet.Dog">
+	 	<property name="name" value="두부"></property>
+	 </bean>
+
+
+
+		
+</beans>

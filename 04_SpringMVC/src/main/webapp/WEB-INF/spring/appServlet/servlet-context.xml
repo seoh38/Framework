@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<!-- annotation-driven : HandleMapping을 만들어줌 -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<!-- 
+		mapping 속성에 해당하는 요청에 대해 location 속성에 지정된 디렉터리(폴더)로 매핑 시켜준다.
+	 -->
+	<resources mapping="/resources/**" location="/resources/" />
+	<!-- 
+		사용자로 부터 /js/jquery-3.6.0.js 라는 요청이 오면 이것을 /resources/js/jquery-3.6.0.js로 매핑을 시켜준다.
+	 -->
+	<resources mapping="/js/**" location="/resources/js/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.kh.mvc" />
+	
+		<!-- 
+			<annotation-driven />, <context:component-scan base-package="com.kh.mvc" />을 사용하지 않을 경우 
+			아래와 같이 HandlerMapping과 Controller를 명시적으로 bean으로 등록해야 한다.
+			
+			각 요청을 수행할 Controller들의 클래스를 빈으로 등록하고
+			<beans:bean id="loginController" class="com.kh.spring.member.controller.LoginController"/>
+			<beans:bean id="logoutController" class="com.kh.spring.member.controller.LogoutController"/>
+			
+			HandlerMapping에 각각의 Controller들을 매핑해야 한다.	
+			<beans:bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+				<beans:property name="mappings">
+					<beans:props>
+						<beans:prop key="login.me">loginController</beans:prop>
+						<beans:prop key="logout.me">logoutController</beans:prop>						
+					</beans:props>
+				</beans:property>
+			</beans:bean>
+		-->
+		
+		<!-- 
+			어노테이션을 사용해서 트랜잭션을 처리하겠다!
+			
+			DB 관련 설정은 root-context.xml에서 import하는 mybatis-context.xml에 작성했지만, 
+			<tx:annotation-driven/>는 실제 트렌젝션을 적용할 빈들이 등록되는 ApplicationContext 설정 파일에 작성해야 한다.
+		 -->
+		<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+	
+		<!-- 
+			인터셉터 설정
+				- 인터셉터가 웹 관련 설정이기 때문에 root-context.xml이 어난 servlet-context.xml에 작성한다.
+		 -->
+		 <interceptors>
+		 	<interceptor>
+		 		<!-- 
+		 			인터셉터를 적용시킬 요청(컨트롤러)을 선택한다. 
+		 			<mapping path="/member/myPage"/>
+		 			<mapping path="/member/update"/>
+		 			
+		 			@와일드카드 /*, /** 의 차이점
+		 			
+		 			/memebr/*
+		 			 - 한 스탭에 관해서는 어떠한 요청도 허용 가능하다.
+		 				- /member/insert (적용 가능)
+		 				- /member/update (적용 가능)
+		 				- /member/update/10 (적용 불가능!)
+		 			/member/**
+		 			 - 모든 스탭의 요청에 대해서 허용이 가능하다.
+		 			 	- /member/insert (적용 가능)
+		 				- /member/update (적용 가능)
+		 				- /member/update/10 (적용 가능)
+		 				- /member/insert/user (적용 가능)
+		 		-->
+		 		<mapping path="/member/**/"/>
+		 		<mapping path="/board/write"/>
+		 		<!-- 
+		 		<mapping path="/board/view"/>
+		 		 -->
+		 		<mapping path="/board/update"/>
+		 		<mapping path="/board/delete"/>
+		 		 
+		 		
+		 		<!-- 인터셉터를 제외시킬 요청 선택 -->
+		 		<exclude-mapping path="/member/enroll"/>
+		 		<exclude-mapping path="/member/idCheck"/>
+		 		<!-- 
+		 			인터셉터 등록
+		 			<beans:bean id="LoginCheckIntercepter" class="com.kh.mvc.common.intercepter.LoginCheckIntercepter"
+		 			/>
+		 		 -->
+		 			<beans:bean id="LoginCheckIntercepter" class="com.kh.mvc.common.intercepter.LoginCheckIntercepter"/>
+		 	</interceptor>
+		 </interceptors>
+		 
+		 
+		
+	
+</beans:beans>
